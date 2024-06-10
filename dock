@@ -1,2 +1,6 @@
 FROM nginx:alpine
 COPY . /usr/share/nginx/html
+\
+commands:
+docker build -t image .
+docker run -d -p 6969:80 image
