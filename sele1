@@ -18,3 +18,10 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.quit();
     }
 })();
+
+commands:
+npm init -y
+npm i selenium-webdriver
+npm i geckodriver --save-dev
+node index.js
+
