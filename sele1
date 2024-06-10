@@ -1,11 +1,9 @@
 
 const { Builder, By, Key, until } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
 
 (async () => {
     const driver = await new Builder()
-        .forBrowser('chrome')
-        .setChromeOptions(new chrome.Options())
+        .forBrowser('firefox')
         .build();
 
     try {
