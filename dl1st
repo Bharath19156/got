@@ -1,0 +1,75 @@
+def activation(out, threshold=1):
+    return 1 if out >= threshold else 0
+
+def perceptron(inp1, inp2, len_rate, out):
+    w = [0.1, 0.8]
+    for epoch in range(1000):  # Iterate for a sufficient number of epochs to ensure convergence
+        for j in range(len(out)):
+            result = w[0] * inp1[j] + w[1] * inp2[j]
+            val = activation(result)
+            if val != out[j]:
+                w[0] = w[0] + len_rate * (out[j] - val) * inp1[j]
+                w[1] = w[1] + len_rate * (out[j] - val) * inp2[j]
+    return w
+
+def perceptron_not(inp, len_rate, out):
+    w = 0.1
+    for epoch in range(1000):  # Iterate for a sufficient number of epochs to ensure convergence
+        for j in range(len(out)):
+            result = w * inp[j]
+            val = activation(result)
+            if val != out[j]:
+                w = w + len_rate * (out[j] - val) * inp[j]
+    return w
+
+# AND gate
+inp1_and = [1, 1, 0, 0]
+inp2_and = [1, 0, 1, 0]
+out_and = [1, 0, 0, 0]
+w_and = perceptron(inp1_and, inp2_and, 0.5, out_and)
+
+# OR gate
+inp1_or = [1, 1, 0, 0]
+inp2_or = [1, 0, 1, 0]
+out_or = [1, 1, 1, 0]
+w_or = perceptron(inp1_or, inp2_or, 0.5, out_or)
+
+# NOT gate
+inp_not = [1, 0]
+out_not = [0, 1]
+w_not = perceptron_not(inp_not, 0.5, out_not)
+
+# XOR gate (combination of OR, NAND, and AND)
+out_nand = [0, 1, 1, 1]
+w_nand = perceptron(inp1_and, inp2_and, 0.5, out_nand)
+
+def xor_perceptron(a, b):
+    # First layer: OR and NAND gates
+    or_output = activation(w_or[0] * a + w_or[1] * b)
+    nand_output = activation(w_nand[0] * a + w_nand[1] * b)
+    
+    # Second layer: AND gate
+    final_input1 = [or_output]
+    final_input2 = [nand_output]
+    final_output = [1]  # Expected output for the final AND gate when inputs are (1, 1)
+    w_final_and = perceptron(final_input1, final_input2, 0.5, final_output)
+    
+    return activation(w_final_and[0] * or_output + w_final_and[1] * nand_output)
+
+def and_gate(a, b):
+    return activation(w_and[0] * a + w_and[1] * b)
+
+def or_gate(a, b):
+    return activation(w_or[0] * a + w_or[1] * b)
+
+def not_gate(a):
+    return activation(w_not * a)
+
+# Test the gates
+a = int(input("input1: "))
+b = int(input("input2: "))
+
+print("AND output:", and_gate(a, b))
+print("OR output:", or_gate(a, b))
+print("NOT output for input1:", not_gate(a))
+print("XOR output:", xor_perceptron(a, b))
